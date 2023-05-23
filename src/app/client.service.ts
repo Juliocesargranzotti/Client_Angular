@@ -12,7 +12,6 @@ export class ClientService {
 
 getClients(): Observable<Client[]>{
   return this.http.get<Client[]>(this.url);
-
 }
 
 save(client: Client) : Observable<Client>{
@@ -24,8 +23,7 @@ update(client: Client): Observable<Client>{
   return this.http.put<Client>(`${this.url}/${client.id}`, client);
 }
 
-delete(client: Client) : Observable<void>{
+remove(client: Client) : Observable<void>{
   return this.http.delete<void>(`${this.url}/${client.id}`);
-
 }
 }
