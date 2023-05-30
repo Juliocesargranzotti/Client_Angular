@@ -11,21 +11,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class ClientsComponent implements OnInit  {
 
   clients: Client[] = [];
+  client: Client = {} as Client;
   isEditing : boolean = false;
-  formGroupClient : FormGroup;
-  submitted: boolean = false;
 
-
-  constructor (private ClientService: ClientService,
-                private formBuilder: FormBuilder
-    )
-     {
-       this.formGroupClient = formBuilder.group({
-
-        id  : [''],
-        name : ['',[Validators.required]],
-        email : ['',[Validators.required,Validators.email]]
-       });
+  constructor (private ClientService: ClientService){
 
       }
 
@@ -42,66 +31,44 @@ export class ClientsComponent implements OnInit  {
     );
   }
 
-  save(){
-    this.submitted = true;
-
-    if(this.formGroupClient.valid){
+  onCleanEvent(client: Client){
+    this.isEditing = false;
+  }
+  onSaveEvent(client: Client){
       if(this.isEditing){
-        this.ClientService.update(this.formGroupClient.value).subscribe(
+        this.ClientService.update(client).subscribe(
           {
             next: () => {
             this.loadClient();
-            this.formGroupClient.reset();
             this.isEditing = false;
-            this.submitted =false;
+
           }
         }
         )
       }
       else{
-        this.ClientService.save(this.formGroupClient.value).subscribe(
+        this.ClientService.save(client).subscribe(
           {
             next: data => {
              this.clients.push(data);
-             this.formGroupClient.reset();
-             this.submitted = false;
+
             }
           }
         );
-        }
+     }
     }
-    }
 
 
 
-  clean(){
-    this.formGroupClient.reset();
-    this.isEditing = false;
-    this.submitted = false;
-  }
+  edit(client: Client) {
 
-  edit(client: Client): void {
-    this.formGroupClient.setValue(client);
+    this.client = client;
     this.isEditing = true;
   }
 
-  remove(client: Client): void {
+  remove(client: Client){
     this.ClientService.remove(client).subscribe({
       next : () => this.loadClient()
     })
-
   }
-
-get name() : any {
-  return this.formGroupClient.get("name");
-}
-
-get email() : any{
-  return this.formGroupClient.get("email");
-}
-
-
-
-
-
 }
