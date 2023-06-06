@@ -7,7 +7,7 @@ import { Client } from './client';
   providedIn: 'root'
 })
 export class ClientService {
-  url = "http://localhost:3000/clients";
+  url = "http://localhost:8080/clients";
   constructor(private http: HttpClient) { }
 
 getClients(): Observable<Client[]>{
